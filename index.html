@@ -1,172 +1,116 @@
 <!doctype html>
 <html lang="en">
-  <head>
-    <title>Model Viewer AR Fixed</title>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <style>
-      body {
-        margin: 0;
-        padding: 0;
-        height: 100vh;
-        overflow: hidden;
-      }
-      model-viewer {
-        width: 100vw;
-        height: 100vh;
-        display: block;
-      }
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Model Viewer AR Fixed</title>
+  <style>
+    body { margin:0; padding:0; height:100vh; overflow:hidden; }
+    model-viewer { width:100vw; height:100vh; display:block; background:#000; }
 
-      .Hotspot {
-        background: #fff;
-        border-radius: 50%;
-        border: none;
-        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
-        cursor: pointer;
-        width: 24px;
-        height: 24px;
-        position: absolute;
-        transform: translate(-50%, -50%);
-      }
-      .HotspotAnnotation {
-        background: #fff;
-        color: #000;
-        padding: 8px;
-        border-radius: 4px;
-        font-size: 14px;
-        position: absolute;
-        top: 100%;
-        left: 50%;
-        transform: translateX(-50%);
-        white-space: nowrap;
-        pointer-events: none;
-      }
+    .Hotspot {
+      background:#fff; border-radius:50%; border:none; box-shadow:0 2px 4px rgba(0,0,0,0.2);
+      cursor:pointer; width:24px; height:24px; position:absolute; transform:translate(-50%,-50%);
+    }
+    .HotspotAnnotation {
+      background:#fff; color:#000; padding:8px; border-radius:4px; font-size:14px;
+      position:absolute; top:100%; left:50%; transform:translateX(-50%); white-space:nowrap;
+      pointer-events:none;
+    }
 
-      #ar-button {
-        position: absolute;
-        bottom: 20px;
-        right: 20px;
-        padding: 10px 20px;
-        background: #fff;
-        border: 1px solid #000;
-        border-radius: 4px;
-        cursor: pointer;
-        z-index: 10;
-      }
+    #ar-prompt {
+      position:absolute; bottom:80px; right:20px; z-index:10; cursor:pointer;
+    }
+    #qr-overlay {
+      position:fixed; top:0; left:0; width:100vw; height:100vh; background:rgba(0,0,0,0.6);
+      display:none; justify-content:center; align-items:center; z-index:20;
+    }
+    #qr-popup {
+      background:#fff; border-radius:8px; padding:10px; max-width:80vw; max-height:80vh;
+      box-shadow:0 4px 12px rgba(0,0,0,0.3);
+    }
+  </style>
 
-      #ar-prompt {
-        position: absolute;
-        bottom: 80px;
-        right: 20px;
-        z-index: 10;
-        cursor: pointer;
-      }
+  <!-- Load model-viewer -->
+  <script type="module" src="https://ajax.googleapis.com/ajax/libs/model-viewer/4.0.0/model-viewer.min.js"></script>
+</head>
+<body>
+  <model-viewer
+    src="Pioneer 1000 10.25.glb"
+    ios-src="Pioneer1000.usdz"
+    ar
+    ar-modes="webxr scene-viewer quick-look"
+    camera-controls
+    tone-mapping="neutral"
+    poster="poster.png"
+    shadow-intensity="2"
+    exposure="0.95"
+    shadow-softness="1"
+    environment-image="legacy">
 
-      #qr-overlay {
-        position: fixed;
-        top: 0;
-        left: 0;
-        width: 100vw;
-        height: 100vh;
-        background: rgba(0, 0, 0, 0.6);
-        display: none;
-        justify-content: center;
-        align-items: center;
-        z-index: 20;
-      }
+    <!-- Hotspots -->
+    <button class="Hotspot" slot="hotspot-2" data-position="-0.3404m 0.5778m 0.1535m">
+      <div class="HotspotAnnotation">INSTRUMENT PANEL & CONTROLS</div>
+    </button>
+    <button class="Hotspot" slot="hotspot-5" data-position="0.8339m 0.5630m 0.4407m">
+      <div class="HotspotAnnotation">BED LIGHT</div>
+    </button>
+    <button class="Hotspot" slot="hotspot-6" data-position="0.2437m 0.8385m 0.4620m">
+      <div class="HotspotAnnotation">REAR SLIDING WINDOW</div>
+    </button>
+    <button class="Hotspot" slot="hotspot-8" data-position="-0.0839m 0.4331m -0.2068m">
+      <div class="HotspotAnnotation">UNDER SEAT STORAGE</div>
+    </button>
+    <button class="Hotspot" slot="hotspot-9" data-position="-0.7972m 0.5656m 0.0276m">
+      <div class="HotspotAnnotation">FUSE BOX</div>
+    </button>
+    <button class="Hotspot" slot="hotspot-10" data-position="-0.6422m 0.2663m 0.0961m">
+      <div class="HotspotAnnotation">DUAL-CLUTCH TRANSMISSION</div>
+    </button>
+    <button class="Hotspot" slot="hotspot-11" data-position="-0.3149m 0.9850m -0.4154m">
+      <div class="HotspotAnnotation">GREEN GLASS WINDSHIELD</div>
+    </button>
 
-      #qr-popup {
-        background: #fff;
-        border-radius: 8px;
-        padding: 10px;
-        max-width: 80vw;
-        max-height: 80vh;
-        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
-      }
-    </style>
+    <!-- AR button -->
+    <button slot="ar-button" id="ar-button">View in your space</button>
 
-    <!-- Load model-viewer -->
-    <script type="module"
-      src="https://ajax.googleapis.com/ajax/libs/model-viewer/4.0.0/model-viewer.min.js">
-    </script>
-  </head>
-  <body>
-    <model-viewer
-      src="Pioneer 1000 10.25.glb"
-      ios-src="Pioneer1000.usdz"  <!-- 👈 add this for iOS -->
-      ar
-      ar-modes="webxr scene-viewer quick-look"  <!-- 👈 supports all platforms -->
-      camera-controls
-      tone-mapping="neutral"
-      poster="poster.png"
-      shadow-intensity="2"
-      exposure="0.95"
-      shadow-softness="1"
-      environment-image="legacy">
-
-      <!-- Hotspots -->
-      <button class="Hotspot" slot="hotspot-2" data-position="-0.3404m 0.5778m 0.1535m">
-        <div class="HotspotAnnotation">INSTRUMENT PANEL & CONTROLS</div>
-      </button>
-      <button class="Hotspot" slot="hotspot-5" data-position="0.8339m 0.5630m 0.4407m">
-        <div class="HotspotAnnotation">BED LIGHT</div>
-      </button>
-      <button class="Hotspot" slot="hotspot-6" data-position="0.2437m 0.8385m 0.4620m">
-        <div class="HotspotAnnotation">REAR SLIDING WINDOW</div>
-      </button>
-      <button class="Hotspot" slot="hotspot-8" data-position="-0.0839m 0.4331m -0.2068m">
-        <div class="HotspotAnnotation">UNDER SEAT STORAGE</div>
-      </button>
-      <button class="Hotspot" slot="hotspot-9" data-position="-0.7972m 0.5656m 0.0276m">
-        <div class="HotspotAnnotation">FUSE BOX</div>
-      </button>
-      <button class="Hotspot" slot="hotspot-10" data-position="-0.6422m 0.2663m 0.0961m">
-        <div class="HotspotAnnotation">DUAL-CLUTCH TRANSMISSION</div>
-      </button>
-      <button class="Hotspot" slot="hotspot-11" data-position="-0.3149m 0.9850m -0.4154m">
-        <div class="HotspotAnnotation">GREEN GLASS WINDSHIELD</div>
-      </button>
-
-      <!-- AR button -->
-      <button slot="ar-button" id="ar-button">View in your space</button>
-
-      <!-- Clickable AR hand icon -->
-      <div id="ar-prompt">
-        <img src="ar_hand_prompt.png" width="64" height="64" alt="AR Hand Prompt">
-      </div>
-    </model-viewer>
-
-    <!-- QR Popup Overlay -->
-    <div id="qr-overlay">
-      <img id="qr-popup" src="qrCode.png" alt="QR Code">
+    <!-- AR hand icon -->
+    <div id="ar-prompt">
+      <img src="ar_hand_prompt.png" width="64" height="64" alt="AR Hand Prompt">
     </div>
+  </model-viewer>
 
-    <script>
-      const modelViewer = document.querySelector('model-viewer');
-      const arPrompt = document.getElementById('ar-prompt');
-      const qrOverlay = document.getElementById('qr-overlay');
+  <!-- QR Popup Overlay -->
+  <div id="qr-overlay">
+    <img id="qr-popup" src="qrCode.png" alt="QR Code">
+  </div>
 
-      // Hotspot click handler
-      document.querySelectorAll('.Hotspot').forEach(button => {
-        button.addEventListener('click', () => {
-          window.open('https://powersports.honda.com/sxs/recutility/pioneer-1000', '_blank', 'noopener');
-        });
-      });
+  <script>
+    const modelViewer = document.querySelector('model-viewer');
+    const arPrompt = document.getElementById('ar-prompt');
+    const qrOverlay = document.getElementById('qr-overlay');
 
-      // Keep hotspots visible in AR
-      modelViewer.addEventListener('ar-status', (event) => {
-        if (event.detail.status === 'session-started') {
-          document.querySelectorAll('.Hotspot').forEach(h => h.style.display = 'block');
-        }
+    // Hotspots open link
+    document.querySelectorAll('.Hotspot').forEach(button => {
+      button.addEventListener('click', () => {
+        window.open('https://powersports.honda.com/sxs/recutility/pioneer-1000', '_blank', 'noopener');
       });
+    });
 
-      // QR popup logic
-      arPrompt.addEventListener('click', () => {
-        qrOverlay.style.display = 'flex';
-      });
-      qrOverlay.addEventListener('click', () => {
-        qrOverlay.style.display = 'none';
-      });
-    </script>
-  </body>
+    // Keep hotspots visible in AR
+    modelViewer.addEventListener('ar-status', (event) => {
+      if (event.detail.status === 'session-started') {
+        document.querySelectorAll('.Hotspot').forEach(h => h.style.display = 'block');
+      }
+    });
+
+    // QR popup
+    arPrompt.addEventListener('click', () => {
+      qrOverlay.style.display = 'flex';
+    });
+    qrOverlay.addEventListener('click', () => {
+      qrOverlay.style.display = 'none';
+    });
+  </script>
+</body>
 </html>
