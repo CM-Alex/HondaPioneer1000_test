@@ -1,7 +1,7 @@
 <!doctype html>
 <html lang="en">
   <head>
-    <title>Model Viewer AR with Hotspots + QR Popup</title>
+    <title>Model Viewer AR Fixed</title>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <style>
@@ -11,7 +11,6 @@
         height: 100vh;
         overflow: hidden;
       }
-
       model-viewer {
         width: 100vw;
         height: 100vh;
@@ -19,7 +18,7 @@
       }
 
       .Hotspot {
-        background: #ffffff;
+        background: #fff;
         border-radius: 50%;
         border: none;
         box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
@@ -29,20 +28,18 @@
         position: absolute;
         transform: translate(-50%, -50%);
       }
-
       .HotspotAnnotation {
-        background: #ffffff;
-        color: #000000;
+        background: #fff;
+        color: #000;
         padding: 8px;
         border-radius: 4px;
         font-size: 14px;
-        pointer-events: none;
-        white-space: nowrap;
         position: absolute;
         top: 100%;
         left: 50%;
         transform: translateX(-50%);
-        box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+        white-space: nowrap;
+        pointer-events: none;
       }
 
       #ar-button {
@@ -57,26 +54,6 @@
         z-index: 10;
       }
 
-      .progress-bar {
-        position: absolute;
-        top: 20px;
-        width: 80%;
-        left: 10%;
-        height: 5px;
-        background: #ccc;
-      }
-
-      .progress-bar.hide {
-        display: none;
-      }
-
-      .update-bar {
-        height: 100%;
-        background: #4CAF50;
-        width: 0%;
-      }
-
-      /* Clickable AR hand icon */
       #ar-prompt {
         position: absolute;
         bottom: 80px;
@@ -85,14 +62,13 @@
         cursor: pointer;
       }
 
-      /* QR popup overlay */
       #qr-overlay {
         position: fixed;
         top: 0;
         left: 0;
         width: 100vw;
         height: 100vh;
-        background-color: rgba(0, 0, 0, 0.6);
+        background: rgba(0, 0, 0, 0.6);
         display: none;
         justify-content: center;
         align-items: center;
@@ -108,13 +84,18 @@
         box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
       }
     </style>
-    <script type="module" src="https://ajax.googleapis.com/ajax/libs/model-viewer/4.0.0/model-viewer.min.js"></script>
+
+    <!-- Load model-viewer -->
+    <script type="module"
+      src="https://ajax.googleapis.com/ajax/libs/model-viewer/4.0.0/model-viewer.min.js">
+    </script>
   </head>
   <body>
     <model-viewer
       src="Pioneer 1000 10.25.glb"
+      ios-src="Pioneer1000.usdz"  <!-- 👈 add this for iOS -->
       ar
-      ar-modes="webxr scene-viewer quick-look"
+      ar-modes="webxr scene-viewer quick-look"  <!-- 👈 supports all platforms -->
       camera-controls
       tone-mapping="neutral"
       poster="poster.png"
@@ -124,31 +105,30 @@
       environment-image="legacy">
 
       <!-- Hotspots -->
-      <button class="Hotspot" slot="hotspot-2" data-position="-0.3404m 0.5778m 0.1535m" aria-label="Instrument Panel">
+      <button class="Hotspot" slot="hotspot-2" data-position="-0.3404m 0.5778m 0.1535m">
         <div class="HotspotAnnotation">INSTRUMENT PANEL & CONTROLS</div>
       </button>
-      <button class="Hotspot" slot="hotspot-5" data-position="0.8339m 0.5630m 0.4407m" aria-label="Bed Light">
+      <button class="Hotspot" slot="hotspot-5" data-position="0.8339m 0.5630m 0.4407m">
         <div class="HotspotAnnotation">BED LIGHT</div>
       </button>
-      <button class="Hotspot" slot="hotspot-6" data-position="0.2437m 0.8385m 0.4620m" aria-label="Rear Sliding Window">
+      <button class="Hotspot" slot="hotspot-6" data-position="0.2437m 0.8385m 0.4620m">
         <div class="HotspotAnnotation">REAR SLIDING WINDOW</div>
       </button>
-      <button class="Hotspot" slot="hotspot-8" data-position="-0.0839m 0.4331m -0.2068m" aria-label="Under Seat Storage">
+      <button class="Hotspot" slot="hotspot-8" data-position="-0.0839m 0.4331m -0.2068m">
         <div class="HotspotAnnotation">UNDER SEAT STORAGE</div>
       </button>
-      <button class="Hotspot" slot="hotspot-9" data-position="-0.7972m 0.5656m 0.0276m" aria-label="Fuse Box">
+      <button class="Hotspot" slot="hotspot-9" data-position="-0.7972m 0.5656m 0.0276m">
         <div class="HotspotAnnotation">FUSE BOX</div>
       </button>
-      <button class="Hotspot" slot="hotspot-10" data-position="-0.6422m 0.2663m 0.0961m" aria-label="Transmission">
+      <button class="Hotspot" slot="hotspot-10" data-position="-0.6422m 0.2663m 0.0961m">
         <div class="HotspotAnnotation">DUAL-CLUTCH TRANSMISSION</div>
       </button>
-      <button class="Hotspot" slot="hotspot-11" data-position="-0.3149m 0.9850m -0.4154m" aria-label="Windshield">
+      <button class="Hotspot" slot="hotspot-11" data-position="-0.3149m 0.9850m -0.4154m">
         <div class="HotspotAnnotation">GREEN GLASS WINDSHIELD</div>
       </button>
 
-      <!-- AR button + progress bar -->
+      <!-- AR button -->
       <button slot="ar-button" id="ar-button">View in your space</button>
-      <div class="progress-bar hide" slot="progress-bar"><div class="update-bar"></div></div>
 
       <!-- Clickable AR hand icon -->
       <div id="ar-prompt">
@@ -166,21 +146,21 @@
       const arPrompt = document.getElementById('ar-prompt');
       const qrOverlay = document.getElementById('qr-overlay');
 
-      // Hotspot links
+      // Hotspot click handler
       document.querySelectorAll('.Hotspot').forEach(button => {
         button.addEventListener('click', () => {
           window.open('https://powersports.honda.com/sxs/recutility/pioneer-1000', '_blank', 'noopener');
         });
       });
 
-      // Keep hotspots visible in AR mode
+      // Keep hotspots visible in AR
       modelViewer.addEventListener('ar-status', (event) => {
         if (event.detail.status === 'session-started') {
           document.querySelectorAll('.Hotspot').forEach(h => h.style.display = 'block');
         }
       });
 
-      // QR overlay logic
+      // QR popup logic
       arPrompt.addEventListener('click', () => {
         qrOverlay.style.display = 'flex';
       });
