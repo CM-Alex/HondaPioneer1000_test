@@ -34,6 +34,12 @@
         transform: translate(-50%, -50%); /* Center on 3D position */
       }
 
+      /* Larger hotspots in AR mode for better visibility */
+      model-viewer[ar-status="session-started"] .Hotspot {
+        width: 32px;
+        height: 32px;
+      }
+
       /* Hotspot annotation styling */
       .HotspotAnnotation {
         background: #ffffff;
@@ -94,7 +100,7 @@
   </head>
   <body>
     <!-- <model-viewer> HTML element -->
-    <model-viewer src="Pioneer 1000 10.25.glb" ar ar-modes="webxr scene-viewer quick-look" camera-controls tone-mapping="neutral" poster="poster.png" shadow-intensity="2" exposure="0.95" shadow-softness="1" environment-image="legacy">
+    <model-viewer src="Pioneer 1000 10.25.glb" ar ar-modes="webxr" camera-controls tone-mapping="neutral" poster="poster.png" shadow-intensity="2" exposure="0.95" shadow-softness="1" environment-image="legacy">
       <button class="Hotspot" slot="hotspot-2" data-position="-0.34043873232895905m 0.5778784904750771m 0.1535048857191572m" data-normal="0.9027806223833643m 0.2310948311030489m -0.36274278336937116m" data-visibility-attribute="visible" aria-label="Learn more about Instrument Panel and Controls">
           <div class="HotspotAnnotation">INSTRUMENT PANEL &amp; CONTROLS</div>
       </button>
@@ -127,10 +133,20 @@
       </div>
     </model-viewer>  
     <script>
+      const modelViewer = document.querySelector('model-viewer');
+      // Add hyperlink functionality to hotspots
       document.querySelectorAll('.Hotspot').forEach(button => {
         button.addEventListener('click', () => {
           window.open('https://powersports.honda.com/sxs/recutility/pioneer-1000', '_blank', 'noopener');
         });
+      });
+      // Ensure hotspots are visible in AR mode
+      modelViewer.addEventListener('ar-status', (event) => {
+        if (event.detail.status === 'session-started') {
+          document.querySelectorAll('.Hotspot').forEach(hotspot => {
+            hotspot.style.display = 'block'; // Ensure visibility in AR
+          });
+        }
       });
     </script>
     <!-- Loads <model-viewer> for browsers: -->
