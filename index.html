@@ -3,35 +3,22 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Model Viewer AR Fixed</title>
+  <title>Honda Pioneer 1000 AR</title>
   <style>
     body { margin:0; padding:0; height:100vh; overflow:hidden; }
     model-viewer { width:100vw; height:100vh; display:block; background:#000; }
-
     .Hotspot {
       background:#fff; border-radius:50%; border:none; box-shadow:0 2px 4px rgba(0,0,0,0.2);
       cursor:pointer; width:24px; height:24px; position:absolute; transform:translate(-50%,-50%);
     }
     .HotspotAnnotation {
       background:#fff; color:#000; padding:8px; border-radius:4px; font-size:14px;
-      position:absolute; top:100%; left:50%; transform:translateX(-50%); white-space:nowrap;
-      pointer-events:none;
+      position:absolute; top:100%; left:50%; transform:translateX(-50%);
+      white-space:nowrap; pointer-events:none;
     }
-
-    #ar-prompt {
-      position:absolute; bottom:80px; right:20px; z-index:10; cursor:pointer;
-    }
-    #qr-overlay {
-      position:fixed; top:0; left:0; width:100vw; height:100vh; background:rgba(0,0,0,0.6);
-      display:none; justify-content:center; align-items:center; z-index:20;
-    }
-    #qr-popup {
-      background:#fff; border-radius:8px; padding:10px; max-width:80vw; max-height:80vh;
-      box-shadow:0 4px 12px rgba(0,0,0,0.3);
-    }
+    #ar-prompt { position:absolute; bottom:80px; right:20px; z-index:10; cursor:pointer; }
   </style>
 
-  <!-- Load model-viewer -->
   <script type="module" src="https://ajax.googleapis.com/ajax/libs/model-viewer/4.0.0/model-viewer.min.js"></script>
 </head>
 <body>
@@ -71,45 +58,30 @@
       <div class="HotspotAnnotation">GREEN GLASS WINDSHIELD</div>
     </button>
 
-    <!-- AR button -->
-    <button slot="ar-button" id="ar-button">View in your space</button>
+    <!-- AR Button -->
+    <button slot="ar-button">View in your space</button>
 
     <!-- AR hand icon -->
     <div id="ar-prompt">
       <img src="ar_hand_prompt.png" width="64" height="64" alt="AR Hand Prompt">
     </div>
-  </model-viewer>
 
-  <!-- QR Popup Overlay -->
-  <div id="qr-overlay">
-    <img id="qr-popup" src="qrCode.png" alt="QR Code">
-  </div>
+  </model-viewer>
 
   <script>
     const modelViewer = document.querySelector('model-viewer');
     const arPrompt = document.getElementById('ar-prompt');
-    const qrOverlay = document.getElementById('qr-overlay');
 
-    // Hotspots open link
-    document.querySelectorAll('.Hotspot').forEach(button => {
-      button.addEventListener('click', () => {
-        window.open('https://powersports.honda.com/sxs/recutility/pioneer-1000', '_blank', 'noopener');
+    // Hotspot click
+    document.querySelectorAll('.Hotspot').forEach(btn => {
+      btn.addEventListener('click', () => {
+        window.open('https://powersports.honda.com/sxs/recutility/pioneer-1000', '_blank');
       });
     });
 
-    // Keep hotspots visible in AR
-    modelViewer.addEventListener('ar-status', (event) => {
-      if (event.detail.status === 'session-started') {
-        document.querySelectorAll('.Hotspot').forEach(h => h.style.display = 'block');
-      }
-    });
-
-    // QR popup
+    // AR hand click could trigger QR or any action if needed
     arPrompt.addEventListener('click', () => {
-      qrOverlay.style.display = 'flex';
-    });
-    qrOverlay.addEventListener('click', () => {
-      qrOverlay.style.display = 'none';
+      alert("You can add QR popup here");
     });
   </script>
 </body>
