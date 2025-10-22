@@ -1,148 +1,72 @@
 <!doctype html>
 <html lang="en">
-  <head>
-    <title>Honda Pioneer 1000 AR</title>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Model Viewer — AR button fix</title>
 
-    <style>
-      body {
-        margin: 0;
-        height: 100vh;
-        overflow: hidden;
+  <style>
+    html,body { height:100%; margin:0; }
+    model-viewer { width:100vw; height:100vh; display:block; background:#000; }
+    .Hotspot {
+      background:#fff; border-radius:50%; width:24px; height:24px;
+      position:absolute; transform:translate(-50%,-50%); box-shadow:0 2px 6px rgba(0,0,0,.25);
+      border:none; cursor:pointer;
+    }
+    .HotspotAnnotation { display:none; } /* keep simple for now */
+  </style>
+
+  <!-- load model-viewer early so the element exists before we reference it -->
+  <script type="module" src="https://ajax.googleapis.com/ajax/libs/model-viewer/4.0.0/model-viewer.min.js"></script>
+</head>
+<body>
+  <!--
+    IMPORTANT:
+    - Replace the src and ios-src filenames with the exact filenames you host.
+    - Page must be served over HTTPS (or localhost) for AR to work on mobile.
+  -->
+  <model-viewer
+    src="Pioneer1000.glb"
+    ios-src="Pioneer1000.usdz"
+    ar
+    ar-modes="scene-viewer quick-look webxr"
+    camera-controls
+    environment-image="neutral"
+    exposure="1"
+    shadow-intensity="1">
+
+    <!-- Hotspots (visible in the 3D browser view) -->
+    <button class="Hotspot" slot="hotspot-2" data-position="-0.3404m 0.5778m 0.1535m" aria-label="Instrument Panel"></button>
+    <button class="Hotspot" slot="hotspot-5" data-position="0.8339m 0.5630m 0.4407m" aria-label="Bed Light"></button>
+
+    <!-- Use the default model-viewer AR button slot -->
+    <button slot="ar-button">View in your space</button>
+  </model-viewer>
+
+  <script>
+    // Basic runtime checks to help debug why AR button may not show:
+    const mv = document.querySelector('model-viewer');
+
+    // Log support info; open console on device to inspect if button missing.
+    (async () => {
+      console.log('model-viewer ready', mv);
+      try {
+        const webxrSupported = await navigator.xr?.isSessionSupported?.('immersive-ar');
+        console.log('WebXR immersive-ar supported:', !!webxrSupported);
+      } catch(e){ console.log('WebXR check error', e); }
+
+      // Quick visibility helpers: if page served insecurely, AR won't work.
+      if (location.protocol !== 'https:' && location.hostname !== 'localhost') {
+        console.warn('AR requires HTTPS or localhost. Serving over:', location.protocol);
       }
-      model-viewer {
-        width: 100vw;
-        height: 100vh;
-        display: block;
-      }
+    })();
 
-      .Hotspot {
-        background: #fff;
-        border-radius: 50%;
-        border: none;
-        box-shadow: 0 2px 4px rgba(0,0,0,0.2);
-        cursor: pointer;
-        width: 24px;
-        height: 24px;
-        position: absolute;
-        transform: translate(-50%, -50%);
-      }
-
-      .HotspotAnnotation {
-        background: #fff;
-        color: #000;
-        padding: 6px 8px;
-        border-radius: 4px;
-        font-size: 13px;
-        position: absolute;
-        top: 100%;
-        left: 50%;
-        transform: translateX(-50%);
-        white-space: nowrap;
-        pointer-events: none;
-      }
-
-      #ar-prompt {
-        position: absolute;
-        bottom: 90px;
-        right: 20px;
-        z-index: 10;
-        cursor: pointer;
-      }
-
-      #qr-overlay {
-        position: fixed;
-        top: 0;
-        left: 0;
-        width: 100vw;
-        height: 100vh;
-        background: rgba(0,0,0,0.7);
-        display: none;
-        justify-content: center;
-        align-items: center;
-        z-index: 20;
-      }
-
-      #qr-overlay img {
-        max-width: 80vw;
-        max-height: 80vh;
-        border-radius: 8px;
-        box-shadow: 0 4px 12px rgba(0,0,0,0.4);
-      }
-    </style>
-
-    <script type="module" src="https://ajax.googleapis.com/ajax/libs/model-viewer/4.0.0/model-viewer.min.js"></script>
-  </head>
-  <body>
-    <model-viewer
-      src="Pioneer1000.glb"
-      ios-src="Pioneer1000.usdz"
-      ar
-      ar-modes="webxr scene-viewer quick-look"
-      camera-controls
-      shadow-intensity="1"
-      exposure="1"
-      environment-image="legacy">
-
-      <!-- Hotspots -->
-      <button class="Hotspot" slot="hotspot-2" data-position="-0.3404m 0.5778m 0.1535m">
-        <div class="HotspotAnnotation">INSTRUMENT PANEL</div>
-      </button>
-      <button class="Hotspot" slot="hotspot-5" data-position="0.8339m 0.5630m 0.4407m">
-        <div class="HotspotAnnotation">BED LIGHT</div>
-      </button>
-      <button class="Hotspot" slot="hotspot-6" data-position="0.2437m 0.8385m 0.4620m">
-        <div class="HotspotAnnotation">REAR SLIDING WINDOW</div>
-      </button>
-      <button class="Hotspot" slot="hotspot-8" data-position="-0.0839m 0.4331m -0.2068m">
-        <div class="HotspotAnnotation">UNDER SEAT STORAGE</div>
-      </button>
-      <button class="Hotspot" slot="hotspot-9" data-position="-0.7972m 0.5656m 0.0276m">
-        <div class="HotspotAnnotation">FUSE BOX</div>
-      </button>
-      <button class="Hotspot" slot="hotspot-10" data-position="-0.6422m 0.2663m 0.0961m">
-        <div class="HotspotAnnotation">DUAL-CLUTCH TRANSMISSION</div>
-      </button>
-      <button class="Hotspot" slot="hotspot-11" data-position="-0.3149m 0.9850m -0.4154m">
-        <div class="HotspotAnnotation">GREEN GLASS WINDSHIELD</div>
-      </button>
-
-      <!-- Default AR button (native model-viewer one) -->
-      <button slot="ar-button" class="ar-button">View in your space</button>
-
-      <!-- AR hand icon -->
-      <div id="ar-prompt">
-        <img src="ar_hand_prompt.png" width="64" height="64" alt="AR prompt">
-      </div>
-    </model-viewer>
-
-    <!-- QR Overlay -->
-    <div id="qr-overlay">
-      <img src="qrCode.png" alt="QR Code">
-    </div>
-
-    <script>
-      const modelViewer = document.querySelector('model-viewer');
-      const arPrompt = document.getElementById('ar-prompt');
-      const qrOverlay = document.getElementById('qr-overlay');
-
-      // Hotspots open link
-      document.querySelectorAll('.Hotspot').forEach(btn => {
-        btn.addEventListener('click', () => {
-          window.open('https://powersports.honda.com/sxs/recutility/pioneer-1000', '_blank');
-        });
+    // Optional: simple click handlers for hotspots (open product page)
+    document.querySelectorAll('.Hotspot').forEach(h => {
+      h.addEventListener('click', () => {
+        window.open('https://powersports.honda.com/sxs/recutility/pioneer-1000', '_blank', 'noopener');
       });
-
-      // Show QR overlay when AR hand tapped
-      arPrompt.addEventListener('click', () => {
-        qrOverlay.style.display = 'flex';
-      });
-
-      // Hide QR when tapped anywhere
-      qrOverlay.addEventListener('click', () => {
-        qrOverlay.style.display = 'none';
-      });
-    </script>
-  </body>
+    });
+  </script>
+</body>
 </html>
