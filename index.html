@@ -6,7 +6,14 @@
     <meta name="description" content="&lt;model-viewer&gt; template">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <style>
-      /* Basic hotspot styling */
+      /* Ensure model-viewer takes up space to avoid collapse */
+      model-viewer {
+        width: 100%;
+        height: 500px; /* Fixed height to ensure visibility, adjust as needed */
+        display: block;
+      }
+
+      /* Hotspot styling to preserve 3D positioning */
       .Hotspot {
         background: #ffffff; /* White background for visibility */
         border-radius: 50%; /* Circular shape, as likely in original */
@@ -15,6 +22,8 @@
         cursor: pointer;
         width: 24px;
         height: 24px;
+        position: absolute; /* Allow ModelViewer to control position */
+        transform: translate(-50%, -50%); /* Center hotspot on its 3D position */
       }
 
       /* Hotspot annotation styling */
@@ -26,9 +35,14 @@
         font-size: 14px;
         pointer-events: none; /* Prevent annotations from blocking clicks */
         white-space: nowrap;
+        position: absolute; /* Position relative to hotspot */
+        top: 100%; /* Place below hotspot */
+        left: 50%;
+        transform: translateX(-50%); /* Center horizontally */
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
       }
 
-      /* Basic AR button styling */
+      /* AR button styling */
       #ar-button {
         position: absolute;
         bottom: 10px;
@@ -38,9 +52,10 @@
         border: 1px solid #000000;
         border-radius: 4px;
         cursor: pointer;
+        z-index: 10; /* Ensure above model */
       }
 
-      /* Basic progress bar styling */
+      /* Progress bar styling */
       .progress-bar {
         position: absolute;
         top: 10px;
@@ -65,6 +80,7 @@
         position: absolute;
         bottom: 60px;
         right: 10px;
+        z-index: 10;
       }
     </style>
   </head>
