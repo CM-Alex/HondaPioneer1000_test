@@ -90,17 +90,46 @@
     const arPrompt = document.getElementById('ar-prompt');
     const qrOverlay = document.getElementById('qr-overlay');
 
-    // Hotspots open link
-    document.querySelectorAll('.Hotspot').forEach(button => {
-      button.addEventListener('click', () => {
-        window.open('https://powersports.honda.com/sxs/recutility/pioneer-1000', '_blank', 'noopener');
-      });
+    // Manual Hotspot Click Handlers
+    const hotspot2 = modelViewer.querySelector('[slot="hotspot-2"]');
+    hotspot2.addEventListener('click', () => {
+      window.open('https://powersports.honda.com/sxs/recutility/pioneer-1000/features#technology', '_blank', 'noopener');
+    });
+
+    const hotspot5 = modelViewer.querySelector('[slot="hotspot-5"]');
+    hotspot5.addEventListener('click', () => {
+      window.open('https://powersports.honda.com/sxs/recutility/pioneer-1000/features#comfort-convenience', '_blank', 'noopener');
+    });
+
+    const hotspot6 = modelViewer.querySelector('[slot="hotspot-6"]');
+    hotspot6.addEventListener('click', () => {
+      window.open('https://powersports.honda.com/sxs/recutility/pioneer-1000/features#comfort-convenience', '_blank', 'noopener');
+    });
+
+    const hotspot8 = modelViewer.querySelector('[slot="hotspot-8"]');
+    hotspot8.addEventListener('click', () => {
+      window.open('https://powersports.honda.com/sxs/recutility/pioneer-1000/features#style', '_blank', 'noopener');
+    });
+
+    const hotspot9 = modelViewer.querySelector('[slot="hotspot-9"]');
+    hotspot9.addEventListener('click', () => {
+      window.open('https://powersports.honda.com/sxs/recutility/pioneer-1000/features#performance', '_blank', 'noopener');
+    });
+
+    const hotspot10 = modelViewer.querySelector('[slot="hotspot-10"]');
+    hotspot10.addEventListener('click', () => {
+      window.open('https://powersports.honda.com/sxs/recutility/pioneer-1000/features#engineering', '_blank', 'noopener');
+    });
+
+    const hotspot11 = modelViewer.querySelector('[slot="hotspot-11"]');
+    hotspot11.addEventListener('click', () => {
+      window.open('https://powersports.honda.com/sxs/recutility/pioneer-1000/features#comfort-convenience', '_blank', 'noopener');
     });
 
     // Keep hotspots visible in AR
     modelViewer.addEventListener('ar-status', (event) => {
       if (event.detail.status === 'session-started') {
-        document.querySelectorAll('.Hotspot').forEach(h => h.style.display = 'block');
+        [hotspot2, hotspot5, hotspot6, hotspot8, hotspot9, hotspot10, hotspot11].forEach(h => h.style.display = 'block');
       }
     });
 
