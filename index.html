@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Model Viewer AR Fixed</title>
   <style>
-    body { margin:0; padding:0; height:100vh; overflow:hidden; }
+    body { margin:0; padding:0; height:100vh; }
     model-viewer { width:100vw; height:100vh; display:block; background:#000; }
 
     .Hotspot {
@@ -18,9 +18,7 @@
       pointer-events:none;
     }
 
-    #ar-prompt {
-      position:absolute; bottom:80px; right:20px; z-index:10; cursor:pointer;
-    }
+    /* Keep QR prompt if needed */
     #qr-overlay {
       position:fixed; top:0; left:0; width:100vw; height:100vh; background:rgba(0,0,0,0.6);
       display:none; justify-content:center; align-items:center; z-index:20;
@@ -30,14 +28,11 @@
       box-shadow:0 4px 12px rgba(0,0,0,0.3);
     }
   </style>
-
-  <!-- Load model-viewer -->
   <script type="module" src="https://ajax.googleapis.com/ajax/libs/model-viewer/4.0.0/model-viewer.min.js"></script>
 </head>
 <body>
   <model-viewer
     src="Pioneer 1000 10.25.glb"
-    ios-src="Pioneer1000.usdz"
     ar
     ar-modes="webxr scene-viewer quick-look"
     camera-controls
@@ -74,71 +69,38 @@
     <!-- Default AR button -->
     <button slot="ar-button">View in your space</button>
 
-    <!-- AR hand icon -->
-    <div id="ar-prompt">
-      <img src="ar_hand_prompt.png" width="64" height="64" alt="AR Hand Prompt">
-    </div>
   </model-viewer>
 
-  <!-- QR Popup Overlay -->
+  <!-- Optional QR Overlay -->
   <div id="qr-overlay">
     <img id="qr-popup" src="qrCode.png" alt="QR Code">
   </div>
 
   <script>
     const modelViewer = document.querySelector('model-viewer');
-    const arPrompt = document.getElementById('ar-prompt');
     const qrOverlay = document.getElementById('qr-overlay');
 
-    // Manual Hotspot Click Handlers
+    // Manual hotspot handlers
     const hotspot2 = modelViewer.querySelector('[slot="hotspot-2"]');
-    hotspot2.addEventListener('click', () => {
-      window.open('https://powersports.honda.com/sxs/recutility/pioneer-1000/features#technology', '_blank', 'noopener');
-    });
-
+    hotspot2.addEventListener('click', () => window.open('#link1', '_blank'));
     const hotspot5 = modelViewer.querySelector('[slot="hotspot-5"]');
-    hotspot5.addEventListener('click', () => {
-      window.open('https://powersports.honda.com/sxs/recutility/pioneer-1000/features#comfort-convenience', '_blank', 'noopener');
-    });
-
+    hotspot5.addEventListener('click', () => window.open('#link2', '_blank'));
     const hotspot6 = modelViewer.querySelector('[slot="hotspot-6"]');
-    hotspot6.addEventListener('click', () => {
-      window.open('https://powersports.honda.com/sxs/recutility/pioneer-1000/features#comfort-convenience', '_blank', 'noopener');
-    });
-
+    hotspot6.addEventListener('click', () => window.open('#link3', '_blank'));
     const hotspot8 = modelViewer.querySelector('[slot="hotspot-8"]');
-    hotspot8.addEventListener('click', () => {
-      window.open('https://powersports.honda.com/sxs/recutility/pioneer-1000/features#style', '_blank', 'noopener');
-    });
-
+    hotspot8.addEventListener('click', () => window.open('#link4', '_blank'));
     const hotspot9 = modelViewer.querySelector('[slot="hotspot-9"]');
-    hotspot9.addEventListener('click', () => {
-      window.open('https://powersports.honda.com/sxs/recutility/pioneer-1000/features#performance', '_blank', 'noopener');
-    });
-
+    hotspot9.addEventListener('click', () => window.open('#link5', '_blank'));
     const hotspot10 = modelViewer.querySelector('[slot="hotspot-10"]');
-    hotspot10.addEventListener('click', () => {
-      window.open('https://powersports.honda.com/sxs/recutility/pioneer-1000/features#engineering', '_blank', 'noopener');
-    });
-
+    hotspot10.addEventListener('click', () => window.open('#link6', '_blank'));
     const hotspot11 = modelViewer.querySelector('[slot="hotspot-11"]');
-    hotspot11.addEventListener('click', () => {
-      window.open('https://powersports.honda.com/sxs/recutility/pioneer-1000/features#comfort-convenience', '_blank', 'noopener');
-    });
+    hotspot11.addEventListener('click', () => window.open('#link7', '_blank'));
 
     // Keep hotspots visible in AR
     modelViewer.addEventListener('ar-status', (event) => {
       if (event.detail.status === 'session-started') {
         [hotspot2, hotspot5, hotspot6, hotspot8, hotspot9, hotspot10, hotspot11].forEach(h => h.style.display = 'block');
       }
-    });
-
-    // QR popup
-    arPrompt.addEventListener('click', () => {
-      qrOverlay.style.display = 'flex';
-    });
-    qrOverlay.addEventListener('click', () => {
-      qrOverlay.style.display = 'none';
     });
   </script>
 </body>
