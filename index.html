@@ -3,10 +3,10 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Model Viewer AR Fixed</title>
+  <title>Pioneer 1000 Feature Assist with AR</title>
   <style>
-    body { margin:0; padding:0; height:100vh; }
-    model-viewer { width:100vw; height:100vh; display:block; background:#000; }
+    body { margin:0; padding:0; height:100vh; overflow:hidden; }
+    model-viewer { width:100vw; height:100vh; display:block; }
 
     .Hotspot {
       background:#fff; border-radius:50%; border:none; box-shadow:0 2px 4px rgba(0,0,0,0.2);
@@ -18,7 +18,9 @@
       pointer-events:none;
     }
 
-    /* Keep QR prompt if needed */
+    #ar-prompt {
+      position:absolute; bottom:80px; right:20px; z-index:10; cursor:pointer;
+    }
     #qr-overlay {
       position:fixed; top:0; left:0; width:100vw; height:100vh; background:rgba(0,0,0,0.6);
       display:none; justify-content:center; align-items:center; z-index:20;
@@ -28,6 +30,8 @@
       box-shadow:0 4px 12px rgba(0,0,0,0.3);
     }
   </style>
+
+  <!-- Load model-viewer -->
   <script type="module" src="https://ajax.googleapis.com/ajax/libs/model-viewer/4.0.0/model-viewer.min.js"></script>
 </head>
 <body>
@@ -36,7 +40,6 @@
     ar
     ar-modes="webxr scene-viewer quick-look"
     camera-controls
-    tone-mapping="neutral"
     poster="poster.png"
     shadow-intensity="2"
     exposure="0.95"
@@ -69,38 +72,71 @@
     <!-- Default AR button -->
     <button slot="ar-button">View in your space</button>
 
+    <!-- AR hand icon -->
+    <div id="ar-prompt">
+      <img src="ar_hand_prompt.png" width="64" height="64" alt="AR Hand Prompt">
+    </div>
   </model-viewer>
 
-  <!-- Optional QR Overlay -->
+  <!-- QR Popup Overlay -->
   <div id="qr-overlay">
     <img id="qr-popup" src="qrCode.png" alt="QR Code">
   </div>
 
   <script>
     const modelViewer = document.querySelector('model-viewer');
+    const arPrompt = document.getElementById('ar-prompt');
     const qrOverlay = document.getElementById('qr-overlay');
 
-    // Manual hotspot handlers
+    // Manual Hotspot Click Handlers
     const hotspot2 = modelViewer.querySelector('[slot="hotspot-2"]');
-    hotspot2.addEventListener('click', () => window.open('#link1', '_blank'));
+    hotspot2.addEventListener('click', () => {
+      window.open('https://powersports.honda.com/sxs/recutility/pioneer-1000/features#technology', '_blank', 'noopener');
+    });
+
     const hotspot5 = modelViewer.querySelector('[slot="hotspot-5"]');
-    hotspot5.addEventListener('click', () => window.open('#link2', '_blank'));
+    hotspot5.addEventListener('click', () => {
+      window.open('https://powersports.honda.com/sxs/recutility/pioneer-1000/features#comfort-convenience', '_blank', 'noopener');
+    });
+
     const hotspot6 = modelViewer.querySelector('[slot="hotspot-6"]');
-    hotspot6.addEventListener('click', () => window.open('#link3', '_blank'));
+    hotspot6.addEventListener('click', () => {
+      window.open('https://powersports.honda.com/sxs/recutility/pioneer-1000/features#comfort-convenience', '_blank', 'noopener');
+    });
+
     const hotspot8 = modelViewer.querySelector('[slot="hotspot-8"]');
-    hotspot8.addEventListener('click', () => window.open('#link4', '_blank'));
+    hotspot8.addEventListener('click', () => {
+      window.open('https://powersports.honda.com/sxs/recutility/pioneer-1000/features#style', '_blank', 'noopener');
+    });
+
     const hotspot9 = modelViewer.querySelector('[slot="hotspot-9"]');
-    hotspot9.addEventListener('click', () => window.open('#link5', '_blank'));
+    hotspot9.addEventListener('click', () => {
+      window.open('https://powersports.honda.com/sxs/recutility/pioneer-1000/features#performance', '_blank', 'noopener');
+    });
+
     const hotspot10 = modelViewer.querySelector('[slot="hotspot-10"]');
-    hotspot10.addEventListener('click', () => window.open('#link6', '_blank'));
+    hotspot10.addEventListener('click', () => {
+      window.open('https://powersports.honda.com/sxs/recutility/pioneer-1000/features#engineering', '_blank', 'noopener');
+    });
+
     const hotspot11 = modelViewer.querySelector('[slot="hotspot-11"]');
-    hotspot11.addEventListener('click', () => window.open('#link7', '_blank'));
+    hotspot11.addEventListener('click', () => {
+      window.open('https://powersports.honda.com/sxs/recutility/pioneer-1000/features#comfort-convenience', '_blank', 'noopener');
+    });
 
     // Keep hotspots visible in AR
     modelViewer.addEventListener('ar-status', (event) => {
       if (event.detail.status === 'session-started') {
         [hotspot2, hotspot5, hotspot6, hotspot8, hotspot9, hotspot10, hotspot11].forEach(h => h.style.display = 'block');
       }
+    });
+
+    // QR popup
+    arPrompt.addEventListener('click', () => {
+      qrOverlay.style.display = 'flex';
+    });
+    qrOverlay.addEventListener('click', () => {
+      qrOverlay.style.display = 'none';
     });
   </script>
 </body>
